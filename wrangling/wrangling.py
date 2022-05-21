@@ -1,4 +1,3 @@
-import csv
 import os 
 import pandas as pd
 import numpy as np
@@ -12,18 +11,21 @@ def load_data(department):
     return csv
 
 def analyze(dict):
-    print("Analyzing...")
+    print("\nAnalyzing...")
     for department in dict:
+        print("\n-------------------------------------------------Department number : ", str(department), "--------------------------------------------------------------------\n")
         nb_features = len(dict[str(department)].columns.values)
         columns_with_nan = checkColumnsWithNan(dict[department])
-        nb_line = dict[department].all().sum()
+        nb_nan_row = dict[department].isna().sum().sum()
+        nb_line = len(dict[department].index)
 
-        print("Department ", str(department), " have ", str(nb_line), " lines\n")
-        print("Departement ", str(department), " have NaN in : ", str(len(columns_with_nan)), "\n")
-        print('Table "batiment" from department : ', str(department), " have ", str(nb_features), " different features\n")
+        print("Number of line : ", str(nb_line))
+        print("\nNumber of columns with NaN values : ", str(len(columns_with_nan)), " and number of row with NaN values :", str(nb_nan_row))
+        print('\nNumber of feature : ',str(nb_features))
+        print("\n", dict[department].describe())
 
 def sort_features(dict):
-    print("Sorting features... \n")
+    print("\nSorting features... \n")
     for department in dict:
         for column in dict[department]:
             if(column not in features):
@@ -31,11 +33,11 @@ def sort_features(dict):
                 print("Deleting", column, " in ", str(department))
 
 def drop_nan(dict):
-    print("Removing NaN values... ")
+    print("\nRemoving NaN values... ")
     for department in dict:
         columns_with_nan = checkColumnsWithNan(dict[department])
-        for column in columns_with_nan:
-            dict[department].dropna(inplace=True)
+        dict[department].dropna(subset=columns_with_nan, inplace=True)
+    print(columns_with_nan)
     return dict
 
 def checkColumnsWithNan(df):
@@ -43,5 +45,5 @@ def checkColumnsWithNan(df):
     for column in df:
         isNaN = (df[column].isna().sum())
         if isNaN != 0:
-            columnsWithNaN.append([column, df[column].isna().sum()])
+            columnsWithNaN.append(column)
     return columnsWithNaN

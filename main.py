@@ -13,16 +13,18 @@ for department in departments:
     df = load_data(department)
     datasets[str(department)] = df
 
+sort_features(datasets);
+
+analyze(datasets)
+
+drop_nan(datasets)
+
+analyze(datasets)
+
 # for department in datasets:
 #     print(datasets[department].head())
-
-# analyze(datasets)
-
-# _data = drop_nan(datasets)
-
-# analyze(_data)
-
-sort_features(datasets)
-
-for department in datasets:
-    print(datasets[department].columns)
+#     csv_path = "./" + str(department) + ".csv"
+#     datasets[department].to_csv(csv_path)
+# for department in datasets:
+#     print(datasets[str(department)].head())
+    # print(datasets[department].where(datasets[department]['bnb_id'] == '620010000D0223_6a917ef55f897b7'))

@@ -4,7 +4,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.ensemble import StackingRegressor
 from sklearn.model_selection import GridSearchCV
 
-def stackingRegressor(x_train, y_train):
+def stackingRegressor(train_set, energy_consumption):
     param_grid = [
         {'n_estimators': [3, 10, 30], 'max_features': [2, 4, 6, 8]},
         {'bootstrap': [False], 'n_estimators': [3, 10], 'max_features': [2, 3, 4]},
@@ -24,5 +24,5 @@ def stackingRegressor(x_train, y_train):
                            scoring='neg_mean_squared_error', return_train_score=True)
     best_reg = grid_search.best_estimator_
     
-    best_reg.fit(x_train, y_train)
+    best_reg.fit(train_set, energy_consumption)
     return best_reg

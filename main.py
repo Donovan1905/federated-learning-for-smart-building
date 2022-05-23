@@ -6,7 +6,7 @@ from pathlib import Path
 from matplotlib.pyplot import sca
 
 from wrangling.wrangling import load_data, analyze, filling_nan, sort_features, encode_to_num, scale
-from learing.main import performTraining
+from learning.main import performTraining
 
 departments = [62]
 #departments = [62, 83, 85, 91]

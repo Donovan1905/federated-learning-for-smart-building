@@ -6,6 +6,7 @@ from learning.stackingRegressor import stackingRegressor
 from learning.linearRegressor import linearRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
+import numpy as np
 
 def performTraining(dataset):
     train_set, energy_consumption, test_set = generateTrainingData(dataset)
@@ -26,22 +27,22 @@ def generateTrainingData(dataset):
 def createModels(train_set, energy_consumption):
     models_list = []
 
-    print('\nCreate bagging Model')
-    models_list.append(baggingRegressor(train_set, energy_consumption))
+    #print('\n Create bagging Model')
+    #models_list.append(baggingRegressor(train_set, energy_consumption))
 
-    print('\nCreate gradient boosting Model')
-    models_list.append(gradientBoostingRegressor(train_set, energy_consumption))
+    #print('\n Create gradient boosting Model')
+    #models_list.append(gradientBoostingRegressor(train_set, energy_consumption))
     
-    print('\nCreate sgd Model')
+    print('\n Create sgd Model')
     models_list.append(sgdRegressor(train_set, energy_consumption))
 
-    print('\nCreate random forest Model')
+    print('\n Create random forest Model')
     models_list.append(rfRegressor(train_set, energy_consumption))
 
-    print('\nCreate stacking Model')
-    models_list.append(stackingRegressor(train_set, energy_consumption))
+    #print('\n Create stacking Model')
+    #models_list.append(stackingRegressor(train_set, energy_consumption))
 
-    print('\nCreate linear Model')
+    print('\n Create linear Model')
     models_list.append(linearRegressor(train_set, energy_consumption))
 
     return models_list

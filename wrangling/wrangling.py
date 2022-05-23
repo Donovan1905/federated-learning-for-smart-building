@@ -4,6 +4,8 @@ import numpy as np
 from .params import *
 import pprint
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import OneHotEncoder, LabelEncoder, OrdinalEncoder
+oe = OneHotEncoder()
 
 
 def load_data(department):
@@ -25,12 +27,6 @@ def analyze(dict):
         print("\nNumber of columns with NaN values : ", str(len(columns_with_nan)), " and number of row with NaN values :", str(nb_nan_row))
         print('\nNumber of feature : ',str(nb_features))
         print("\n", dict[department].describe())
-
-
-        # for feature in num_features:    
-        #     plt.boxplot(dict[department][feature], vert=False, showfliers=True, labels=[feature], showmeans=True)
-        #     plt.rcParams["figure.figsize"] = [35, 10]
-        #     plt.show()
 
 def sort_features(dict):
     print("\nSorting features... \n")
@@ -56,6 +52,12 @@ def filling_nan(dict):
                 dict[department][column].fillna(most_frequent_occ, inplace=True)
     return dict
 
+def encode_to_num(dict):
+    result = dict
+    for department in dict:
+        dict[department] = pd.get_dummies(dict[department], columns=enum_features, drop_first=True)
+        
+            
 def checkColumnsWithNan(df):
     columnsWithNaN = dict()
     for column in df:

@@ -13,7 +13,7 @@ def performTraining(dataset):
     models_comparison = compareModels(train_set, energy_consumption, models_list)
 
 def generateTrainingData(dataset):
-    train_set, test_set = split_train_test(dataset, 0.2)
+    train_set, test_set = train_test_split(dataset, 0.2)
 
     train_set = train_set.drop("nom_de_la_colonne_à_predict", axis=1)
     energy_consumption = train_set["nom_de_la_colonne_à_predict"].copy()

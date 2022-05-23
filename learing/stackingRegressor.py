@@ -22,7 +22,9 @@ def stackingRegressor(train_set, energy_consumption):
 
     grid_search = GridSearchCV(reg, param_grid, cv=5,
                            scoring='neg_mean_squared_error', return_train_score=True)
+    print("\n Start training stacking model ...")
+    grid_search.fit(train_set, energy_consumption)
+    print("\n Searching best estimator ...")
     best_reg = grid_search.best_estimator_
-    
-    best_reg.fit(train_set, energy_consumption)
+    print(best_reg)
     return best_reg

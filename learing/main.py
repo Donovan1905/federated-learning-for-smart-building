@@ -12,22 +12,36 @@ def performTraining(dataset):
     models_list = createModels(train_set, energy_consumption)
     models_comparison = compareModels(train_set, energy_consumption, models_list)
 
+    return models_comparison
+
 def generateTrainingData(dataset):
-    train_set, test_set = train_test_split(dataset, 0.2)
 
-    train_set = train_set.drop("nom_de_la_colonne_à_predict", axis=1)
-    energy_consumption = train_set["nom_de_la_colonne_à_predict"].copy()
+    energy_consumption = dataset["mtedle2019_elec_conso_tot"]
+    data = dataset.drop("mtedle2019_elec_conso_tot", axis=1)
 
-    return train_set, energy_consumption, test_set
+    train_set, test_set, predict_train, predict_test = train_test_split(data, energy_consumption, test_size=0.2, random_state=42)
+
+    return train_set, predict_train, test_set
 
 def createModels(train_set, energy_consumption):
     models_list = []
 
+    print('\nCreate bagging Model')
     models_list.append(baggingRegressor(train_set, energy_consumption))
+
+    print('\nCreate gradient boosting Model')
     models_list.append(gradientBoostingRegressor(train_set, energy_consumption))
+    
+    print('\nCreate sgd Model')
     models_list.append(sgdRegressor(train_set, energy_consumption))
+
+    print('\nCreate random forest Model')
     models_list.append(rfRegressor(train_set, energy_consumption))
+
+    print('\nCreate stacking Model')
     models_list.append(stackingRegressor(train_set, energy_consumption))
+
+    print('\nCreate linear Model')
     models_list.append(linearRegressor(train_set, energy_consumption))
 
     return models_list

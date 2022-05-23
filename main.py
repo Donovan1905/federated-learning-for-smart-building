@@ -6,9 +6,10 @@ from pathlib import Path
 from matplotlib.pyplot import sca
 
 from wrangling.wrangling import load_data, analyze, filling_nan, sort_features, encode_to_num, scale
+from learing.main import performTraining
 
-# departments = [62]
-departments = [62, 83, 85, 91]
+departments = [62]
+#departments = [62, 83, 85, 91]
 datasets = dict()
 
 for department in departments:
@@ -23,4 +24,6 @@ scale(datasets)
 analyze(datasets)
 
 for department in datasets:
-    print(datasets[str(department)].head())
+    results = performTraining(datasets[str(department)])
+    print(results)
+

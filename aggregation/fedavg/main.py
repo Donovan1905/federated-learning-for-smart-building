@@ -15,7 +15,7 @@ def read_options():
                         help='name of trainer;',
                         type=str,
                         choices=OPTIMIZERS,
-                        default='fedavg4')
+                        default='fedavg')
     parser.add_argument('--dataset',
                         help='name of dataset;',
                         type=str,

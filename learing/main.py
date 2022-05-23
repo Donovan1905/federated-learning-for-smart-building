@@ -3,7 +3,7 @@ from learing.gradientBoostingRegressor import gradientBoostingRegressor
 from learing.sgdRegressor import sgdRegressor
 from learing.randomForestRegressor import rfRegressor
 from learing.stackingRegressor import stackingRegressor
-from learing.gradientBoostingRegressor import gradientBoostingRegressor
+from learing.linearRegressor import linearRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
 
@@ -28,7 +28,7 @@ def createModels(train_set, energy_consumption):
     models_list.append(sgdRegressor(train_set, energy_consumption))
     models_list.append(rfRegressor(train_set, energy_consumption))
     models_list.append(stackingRegressor(train_set, energy_consumption))
-    models_list.append(gradientBoostingRegressor(train_set, energy_consumption))
+    models_list.append(linearRegressor(train_set, energy_consumption))
 
     return models_list
 

@@ -2,6 +2,8 @@ import os
 import pandas as pd
 import numpy as np
 from .params import *
+import pprint
+import matplotlib.pyplot as plt
 
 
 def load_data(department):
@@ -24,6 +26,12 @@ def analyze(dict):
         print('\nNumber of feature : ',str(nb_features))
         print("\n", dict[department].describe())
 
+
+        # for feature in num_features:    
+        #     plt.boxplot(dict[department][feature], vert=False, showfliers=True, labels=[feature], showmeans=True)
+        #     plt.rcParams["figure.figsize"] = [35, 10]
+        #     plt.show()
+
 def sort_features(dict):
     print("\nSorting features... \n")
     for department in dict:
@@ -32,18 +40,28 @@ def sort_features(dict):
                 del (dict[department])[column]
                 print("Deleting", column, " in ", str(department))
 
-def drop_nan(dict):
-    print("\nRemoving NaN values... ")
+def filling_nan(dict):
+    print("\nFilling NaN values... ")
     for department in dict:
         columns_with_nan = checkColumnsWithNan(dict[department])
-        dict[department].dropna(subset=columns_with_nan, inplace=True)
-    print(columns_with_nan)
+
+        for column in columns_with_nan: 
+            if(column in num_features):
+                print("\nFilling ", column, " with mean")
+                dict[department][column].fillna(round(dict[department][column].mean()), inplace=True)
+            
+            if(column in enum_features):
+                print("\nFilling ", column, " with most frequent occurence")
+                most_frequent_occ = dict[department][column].value_counts().index[0]
+                dict[department][column].fillna(most_frequent_occ, inplace=True)
     return dict
 
 def checkColumnsWithNan(df):
-    columnsWithNaN = []
+    columnsWithNaN = dict()
     for column in df:
         isNaN = (df[column].isna().sum())
         if isNaN != 0:
-            columnsWithNaN.append(column)
+            columnsWithNaN[column] = isNaN
+    pp = pprint.PrettyPrinter(indent=4)
+    pp.pprint(columnsWithNaN)
     return columnsWithNaN

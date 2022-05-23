@@ -3,7 +3,7 @@ from json import load
 import os
 from pathlib import Path
 
-from wrangling.wrangling import load_data, analyze, drop_nan, sort_features
+from wrangling.wrangling import load_data, analyze, filling_nan, sort_features
 
 departments = [62]
 # departments = [62, 83, 85, 91]
@@ -17,7 +17,7 @@ sort_features(datasets);
 
 analyze(datasets)
 
-drop_nan(datasets)
+filling_nan(datasets)
 
 analyze(datasets)
 

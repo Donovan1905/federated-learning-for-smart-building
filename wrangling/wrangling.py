@@ -4,8 +4,8 @@ import numpy as np
 from .params import *
 import pprint
 import matplotlib.pyplot as plt
-from sklearn.preprocessing import OneHotEncoder, LabelEncoder, OrdinalEncoder
-oe = OneHotEncoder()
+from sklearn import preprocessing
+oe = preprocessing.OneHotEncoder()
 
 
 def load_data(department):
@@ -53,11 +53,15 @@ def filling_nan(dict):
     return dict
 
 def encode_to_num(dict):
-    result = dict
     for department in dict:
         dict[department] = pd.get_dummies(dict[department], columns=enum_features, drop_first=True)
-        
-            
+
+def scale(dict):
+    for department in dict:
+        scaler = preprocessing.StandardScaler()
+        scaled = scaler.fit_transform(dict[department])
+        dict[department] = pd.DataFrame(scaled, columns=dict[department].columns)
+
 def checkColumnsWithNan(df):
     columnsWithNaN = dict()
     for column in df:

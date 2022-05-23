@@ -1,5 +1,5 @@
 features = [
-    'bnb_id',                                       # identifiant unique
+    # 'bnb_id',                                       # identifiant unique
     'commune',                                      # Nom de la commune
     'adedpe202006_logtype_baie_mat',                # x Matériaux de l'encadrement de la baie | ['autres', 'bois', 'metal', ..., None]
     'adedpe202006_logtype_baie_remplissage',        # x Type de remplissage des vitrages argon ou air |  ['air sec', 'argon ou krypton', None]

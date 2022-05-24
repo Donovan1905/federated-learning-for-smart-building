@@ -11,7 +11,7 @@ def baggingRegressor(train_set, energy_consumption):
 
     reg = BaggingRegressor(base_estimator=SVR(), n_estimators=10, random_state=0)
     
-    grid_search = GridSearchCV(reg, param_grid, cv=5,
+    grid_search = GridSearchCV(reg, param_grid, cv=10,
                            scoring='neg_mean_squared_error', return_train_score=True)
     print("\n Start training bagging model ...")
     grid_search.fit(train_set, energy_consumption)

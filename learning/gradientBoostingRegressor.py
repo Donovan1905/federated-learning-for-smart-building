@@ -10,7 +10,7 @@ def gradientBoostingRegressor(train_set, energy_consumption):
 
     reg = GradientBoostingRegressor(random_state=0)
 
-    grid_search = GridSearchCV(reg, param_grid, cv=5,
+    grid_search = GridSearchCV(reg, param_grid, cv=10,
                            scoring='neg_mean_squared_error', return_train_score=True)
     print("\n Start training gradient boosting model ...")
     grid_search.fit(train_set, energy_consumption)

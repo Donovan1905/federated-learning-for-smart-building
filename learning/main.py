@@ -7,11 +7,14 @@ from learning.linearRegressor import linearRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
 import numpy as np
+import os
+from joblib import load
 
 def performTraining(dataset):
-    train_set, energy_consumption, test_set = generateTrainingData(dataset)
-    models_list = createModels(train_set, energy_consumption)
-    models_comparison = compareModels(train_set, energy_consumption, models_list)
+    train_set, energy_consumption, test_set, predict_test = generateTrainingData(dataset)
+    models_list = loadModels()
+    #models_list = createModels(train_set, energy_consumption)
+    models_comparison = compareModels(test_set, predict_test, models_list)
 
     return models_comparison
 
@@ -22,7 +25,7 @@ def generateTrainingData(dataset):
 
     train_set, test_set, predict_train, predict_test = train_test_split(data, energy_consumption, test_size=0.2, random_state=42)
 
-    return train_set, predict_train, test_set
+    return train_set, predict_train, test_set, predict_test
 
 def createModels(train_set, energy_consumption):
     models_list = []
@@ -33,14 +36,14 @@ def createModels(train_set, energy_consumption):
     #print('\n Create gradient boosting Model')
     #models_list.append(gradientBoostingRegressor(train_set, energy_consumption))
     
-    #print('\n Create sgd Model')
-    #models_list.append(sgdRegressor(train_set, energy_consumption))
+    print('\n Create sgd Model')
+    models_list.append(sgdRegressor(train_set, energy_consumption))
 
     #print('\n Create random forest Model')
     #models_list.append(rfRegressor(train_set, energy_consumption))
 
-    print('\n Create stacking Model')
-    models_list.append(stackingRegressor(train_set, energy_consumption))
+    #print('\n Create stacking Model')
+    #models_list.append(stackingRegressor(train_set, energy_consumption))
 
     #print('\n Create linear Model')
     #models_list.append(linearRegressor(train_set, energy_consumption))
@@ -59,4 +62,11 @@ def compareModels(train_set, energy_consumption, models_list):
         models_results.append(results)
 
     return models_results
+
+def loadModels():
+    models_folder = os.path.join(os.path.dirname(__file__), "../_data/models")
+    models_list = []
+    for model in os.listdir(models_folder):
+        models_list.append(load(models_folder + '/' + model)) 
+    return models_list
 

@@ -1,6 +1,6 @@
 # GLOBAL PARAMETERS
 DATASETS = ['sent140', 'nist', 'shakespeare',
-            'mnist', 'synthetic', 'cifar10']
+            'mnist', 'synthetic', 'cifar10', 'smartbuilding']
 TRAINERS = {'fedavg': 'FedAvgTrainer',
             'fedavg4': 'FedAvg4Trainer',
             'fedavg5': 'FedAvg5Trainer',
@@ -32,6 +32,8 @@ class ModelConfig(object):
                            }
             return shakespeare[model]
         elif dataset == 'synthetic':
+            return {'input_shape': 60, 'num_class': 10}
+        elif dataset == 'smartbuilding':
             return {'input_shape': 60, 'num_class': 10}
         else:
             raise ValueError('Not support dataset {}!'.format(dataset))

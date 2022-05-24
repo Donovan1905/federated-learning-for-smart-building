@@ -1,22 +1,24 @@
 from learning.baggingRegressor import baggingRegressor
 from learning.gradientBoostingRegressor import gradientBoostingRegressor
+from learning.mlpRegressor import mlpRegressor
 from learning.sgdRegressor import sgdRegressor
 from learning.randomForestRegressor import rfRegressor
 from learning.stackingRegressor import stackingRegressor
 from learning.linearRegressor import linearRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
+from sklearn.datasets import make_regression
 import numpy as np
 import os
 from joblib import load
 
 def performTraining(dataset):
     train_set, energy_consumption, test_set, predict_test = generateTrainingData(dataset)
-    models_list = loadModels()
-    #models_list = createModels(train_set, energy_consumption)
-    models_comparison = compareModels(test_set, predict_test, models_list)
+    #models_list = loadModels()
+    models_list = createModels(train_set, energy_consumption)
+    #models_comparison = compareModels(test_set, predict_test, models_list)
 
-    return models_comparison
+    return "models_comparison"
 
 def generateTrainingData(dataset):
 
@@ -36,8 +38,8 @@ def createModels(train_set, energy_consumption):
     #print('\n Create gradient boosting Model')
     #models_list.append(gradientBoostingRegressor(train_set, energy_consumption))
     
-    print('\n Create sgd Model')
-    models_list.append(sgdRegressor(train_set, energy_consumption))
+    #print('\n Create sgd Model')
+    #models_list.append(sgdRegressor(train_set, energy_consumption))
 
     #print('\n Create random forest Model')
     #models_list.append(rfRegressor(train_set, energy_consumption))
@@ -47,6 +49,13 @@ def createModels(train_set, energy_consumption):
 
     #print('\n Create linear Model')
     #models_list.append(linearRegressor(train_set, energy_consumption))
+
+    X, y = make_regression(n_samples=200, random_state=1)
+    X_train, X_test, y_train, y_test = train_test_split(X, y,
+                                                    random_state=1)
+
+    print('\n Create neuronal Model')
+    models_list.append(mlpRegressor(X_train, y_train))
 
     return models_list
 

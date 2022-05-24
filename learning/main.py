@@ -33,17 +33,17 @@ def createModels(train_set, energy_consumption):
     #print('\n Create gradient boosting Model')
     #models_list.append(gradientBoostingRegressor(train_set, energy_consumption))
     
-    print('\n Create sgd Model')
-    models_list.append(sgdRegressor(train_set, energy_consumption))
+    #print('\n Create sgd Model')
+    #models_list.append(sgdRegressor(train_set, energy_consumption))
 
-    print('\n Create random forest Model')
-    models_list.append(rfRegressor(train_set, energy_consumption))
+    #print('\n Create random forest Model')
+    #models_list.append(rfRegressor(train_set, energy_consumption))
 
-    #print('\n Create stacking Model')
-    #models_list.append(stackingRegressor(train_set, energy_consumption))
+    print('\n Create stacking Model')
+    models_list.append(stackingRegressor(train_set, energy_consumption))
 
-    print('\n Create linear Model')
-    models_list.append(linearRegressor(train_set, energy_consumption))
+    #print('\n Create linear Model')
+    #models_list.append(linearRegressor(train_set, energy_consumption))
 
     return models_list
 

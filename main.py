@@ -28,8 +28,8 @@ datasets = dict()
 #    results = performTraining(datasets[str(department)])
 #    print(results)
 
-performTraining()
+#performTraining()
 
-#nb_loop = 10
-#federationLoop(nb_loop)
+nb_loop = 10
+federationLoop(nb_loop)
 

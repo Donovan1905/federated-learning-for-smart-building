@@ -5,22 +5,23 @@ from pathlib import Path
 
 from matplotlib.pyplot import sca
 
-from wrangling.wrangling import load_data, analyze, filling_nan, sort_features, encode_to_num, scale
+from wrangling.wrangling import load_data, analyze, filling_nan, create_features, encode_to_num, scale
 
-# departments = [62]
-departments = [62, 83, 85, 91]
+floors = [3]
+# floors = [3, 4 ,5, 6, 7]
 datasets = dict()
 
-for department in departments:
-    df = load_data(department)
-    datasets[str(department)] = df
+for floor in floors:
+    df = load_data(floor)
+    datasets[str(floor)] = df
 
-analyze(datasets)
-sort_features(datasets)
 filling_nan(datasets)
+create_features(datasets)
 encode_to_num(datasets)
 scale(datasets)
-analyze(datasets)
 
-for department in datasets:
-    print(datasets[str(department)].head())
+for floor in datasets:
+    print(datasets[str(floor)].head())
+
+for floor in datasets:
+    datasets[floor].to_csv(("./_data/csv/wrangled-floor-" + str(floor) + ".csv"))

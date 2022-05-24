@@ -5,7 +5,7 @@ import os
 
 def mlpRegressor(train_set, energy_consumption):
 
-    reg = MLPRegressor(random_state=1, max_iter=500)
+    reg = MLPRegressor(random_state=1, max_iter=10000)
 
     print("\n Start training neuronal network model ...")
     reg.fit(train_set, energy_consumption)

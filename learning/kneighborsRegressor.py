@@ -1,19 +1,18 @@
-from sklearn.svm import SVR
-from sklearn.ensemble import BaggingRegressor
+from sklearn.neighbors import KNeighborsRegressor
 from sklearn.model_selection import GridSearchCV
 from joblib import dump
 import os
 
-def baggingRegressor(train_set, energy_consumption):
+def kneighborsRegressor(train_set, energy_consumption):
     param_grid = [
-        {'n_estimators': [10, 25, 50, 100], 'max_features': [5, 15, 25, 50, 75]}
+        {'n_neighbors' : [1, 2, 3, 5]}
     ]
 
-    reg = BaggingRegressor(base_estimator=SVR(), n_estimators=10, random_state=0)
-    
+    reg = KNeighborsRegressor(n_neighbors=2)
+
     grid_search = GridSearchCV(reg, param_grid, cv=10,
                            scoring='neg_mean_squared_error', return_train_score=True)
-    print("\n Start training bagging model ...")
+    print("\n Start training KNeighbors model ...")
     grid_search.fit(train_set, energy_consumption)
     print("\n Searching best estimator ...")
     best_reg = grid_search.best_estimator_
@@ -23,4 +22,4 @@ def baggingRegressor(train_set, energy_consumption):
 
 def saveModel(regressor):
     models_folder = os.path.join(os.path.dirname(__file__), "../_data/models")
-    dump(regressor, models_folder + "/Bagging.pkl")
+    dump(regressor, models_folder + "/KNeighbors.pkl")

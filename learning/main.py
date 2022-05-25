@@ -61,12 +61,13 @@ def compareModels(X_test, y_test, models_list, floor):
         max_err = max_error(y_test, y_pred)
         mae = mean_absolute_error(y_test, y_pred)
         mse = mean_squared_error(y_test, y_pred)
+        rmse = np.sqrt(mse)
 
         models_results.append(cv_results)
         names.append(name)
-        results = "\n %s: \nmean : %f \nstd : %f \nmax error : %f \nmae  : %f \nmse : %f" % (name, model_scores.mean(), model_scores.std(), max_err, mae, mse)
+        results = "\n %s: \nmean : %f \nstd : %f \nmax error : %f \nmae  : %f \nmse : %f \nrmse : %f" % (name, model_scores.mean(), model_scores.std(), max_err, mae, mse, rmse)
 
-        model_results_df = pd.DataFrame({"Model": [name], "Score_mean": [model_scores.mean()], "Score_std": [model_scores.std()], "Max_error": [max_err], "MAE": [mae], "MSE": [mse]})
+        model_results_df = pd.DataFrame({"Model": [name], "Score_mean": [model_scores.mean()], "Score_std": [model_scores.std()], "Max_error": [max_err], "MAE": [mae], "MSE": [mse], "RMSE": [rmse]})
         results_df.append(model_results_df, ignore_index = True)
 
         print(results)

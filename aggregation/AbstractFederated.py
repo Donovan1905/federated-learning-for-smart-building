@@ -3,8 +3,9 @@ from abc import ABCMeta, abstractmethod
 from sklearn.neural_network import MLPRegressor
 from sklearn.datasets import make_regression
 from sklearn.model_selection import train_test_split
-import time
 import numpy as np
+import time
+from time import strftime
 
 
 class AbstractFederated(metaclass=ABCMeta):
@@ -67,7 +68,7 @@ class AbstractFederated(metaclass=ABCMeta):
 
         self.global_model_score_history.append(score)
         self.global_model_loss_history.append(self.global_model.best_loss_)
-        loop_duration = time.time() - self.start_time
+        loop_duration = (time.time() - self.start_time)/60
 
         if (loop_number == 1):
             self.global_model_best_score = score

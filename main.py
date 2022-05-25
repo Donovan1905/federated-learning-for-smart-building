@@ -2,34 +2,34 @@ from calendar import day_abbr
 from json import load
 import os
 from pathlib import Path
-
+import pandas as pd
 from matplotlib.pyplot import sca
-
-from wrangling.wrangling import load_data, analyze, filling_nan, sort_features, encode_to_num, scale
 from learning.main import performTraining
 from aggregation.fedavg import federationLoop
+from wrangling.wrangling import load_data, analyze, filling_nan, create_features, encode_to_num, scale
 
-departments = [62]
-#departments = [62, 83, 85, 91]
+floors = [3]
+# floors = [3, 4 ,5, 6, 7]
 datasets = dict()
 
-#for department in departments:
-   # df = load_data(department)
-   # datasets[str(department)] = df
+for floor in floors:
+    df = load_data(floor)
+    datasets[str(floor)] = df
 
-#analyze(datasets)
-#sort_features(datasets)
-#filling_nan(datasets)
-#encode_to_num(datasets)
-#scale(datasets)
-#analyze(datasets)
+filling_nan(datasets)
+create_features(datasets)
+encode_to_num(datasets)
+scale(datasets)
 
-#for department in datasets:
-#    results = performTraining(datasets[str(department)])
-#    print(results)
+for floor in datasets:
+    print(datasets[str(floor)].head())
 
-#performTraining()
+for floor in datasets:
+    datasets[floor].to_csv(("./_data/csv/wrangled-floor-" + str(floor) + ".csv"))
 
-nb_loop = 10
-federationLoop(nb_loop)
+dataset_folder = os.path.join(os.path.dirname(__file__), "./_data/csv")
+dataset = pd.read_csv(dataset_folder + "/wrangled-floor-3.csv")
+performTraining(dataset)
 
+#nb_loop = 5
+#federationLoop(nb_loop)

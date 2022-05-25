@@ -24,7 +24,7 @@ def federationLoop(nb_loop):
     generateLocalModels()
     while i <= nb_loop:
         print("Federation round n°" + str(i))
-        start_time = time.time()
+        globals()['start_time'] = time.time()
         updateLocalModels()
         aggregated_weight_matrix, aggregated_bias_matrix = federate()
         updateGlobalModel(aggregated_weight_matrix, aggregated_bias_matrix)
@@ -49,22 +49,31 @@ def updateGlobalModel(aggregated_weight_matrix, aggregated_bias_matrix):
 
 def federate():
     print("------ FEDERATE LOCAL MODELS ------")
-    weight_matrix = local_models[0].coefs_
-    bias_matrix = local_models[0].intercepts_
+    weight_matrix = []
+    bias_matrix = []
 
-    for model in local_models[1:]:
-        weight_matrix += model.coefs_
-        bias_matrix += model.intercepts_
+    for model in local_models:
+        weight_matrix.append(model.coefs_)
+        bias_matrix.append(model.intercepts_)
 
-    aggregated_weight_matrix = np.true_divide([2, 4, 6], 2).tolist()
+    aggregated_weight_matrix = aggregate(weight_matrix)
     print("Aggregated weight matrix")
     print(aggregated_weight_matrix)
 
-    aggregated_bias_matrix = np.true_divide(np.array(bias_matrix), len(local_models)).tolist()
+    aggregated_bias_matrix = aggregate(bias_matrix)
     print("Aggregated bias matrix")
     print(aggregated_bias_matrix)
 
     return aggregated_weight_matrix, aggregated_bias_matrix
+
+def aggregate(matrix):
+    average = matrix[0]
+    i=1
+    for elem in matrix[1:]:
+        average += np.array(elem, dtype=object)
+        i+=1
+    
+    return np.true_divide(average, i).tolist()
 
 def updateLocalModels():
     print("----- UPDATE LOCAL MODELS -----")

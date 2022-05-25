@@ -13,21 +13,20 @@ import numpy as np
 import os
 from joblib import load
 
-def performTraining():
-    X, y = make_regression(n_samples=200, random_state=1)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1)
+def performTraining(dataset):
+    X_train, X_test, y_train, y_test = generateTrainingData(dataset)
     #models_list = loadModels()
     models_list = createModels(X_train, y_train)
     compareModels(X_test, y_test, models_list)
 
 def generateTrainingData(dataset):
 
-    energy_consumption = dataset["mtedle2019_elec_conso_tot"]
-    data = dataset.drop("mtedle2019_elec_conso_tot", axis=1)
+    energy_consumption = dataset["tot_energy"]
+    data = dataset.drop("tot_energy", axis=1)
 
-    train_set, test_set, predict_train, predict_test = train_test_split(data, energy_consumption, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(data, energy_consumption, test_size=0.2, random_state=42)
 
-    return train_set, predict_train, test_set, predict_test
+    return X_train, X_test, y_train, y_test
 
 def createModels(X_train, y_train):
     print("----- CREATE MODELS -----")

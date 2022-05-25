@@ -1,3 +1,4 @@
+from glob import glob
 from multiprocessing.sharedctypes import Value
 import os 
 import pandas as pd
@@ -12,32 +13,44 @@ from datetime import date, datetime
 
 
 oe = preprocessing.OneHotEncoder()
-
 def load_data(floor):
-    csv_path_2018 = os.path.join(os.path.dirname(os.path.abspath(__file__)), ('../_data/csv/2018Floor' + str(floor) + '.csv'))
-    csv_path_2019 = os.path.join(os.path.dirname(os.path.abspath(__file__)), ('../_data/csv/2019Floor' + str(floor) + '.csv'))
-    print("Loading 2018... ", csv_path_2018)
-    csv_2018 = pd.read_csv(csv_path_2018, sep=',', low_memory=False)
-    print("Loading 2019... ", csv_path_2019)
-    csv_2019 = pd.read_csv(csv_path_2019, sep=',', low_memory=False)
+    if (os.path.isfile(os.path.join(os.path.dirname(os.path.abspath(__file__)), ('../_data/csv/wrangled-floor-' + str(floor) + '.csv')))):
+        print("Existing wrangled dataset detected for floor " + str(floor) + ", loading...\n")
+        csv_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ('../_data/csv/wrangled-floor-' + str(floor) +  '.csv'))
+        csv = pd.read_csv(csv_path, sep=',', low_memory=False)
+        return csv
+    else:       
+        csv_path_2018 = os.path.join(os.path.dirname(os.path.abspath(__file__)), ('../_data/csv/2018Floor' + str(floor) + '.csv'))
+        csv_path_2019 = os.path.join(os.path.dirname(os.path.abspath(__file__)), ('../_data/csv/2019Floor' + str(floor) + '.csv'))
+        print("Loading 2018... ", csv_path_2018)
+        csv_2018 = pd.read_csv(csv_path_2018, sep=',', low_memory=False)
+        print("Loading 2019... ", csv_path_2019)
+        csv_2019 = pd.read_csv(csv_path_2019, sep=',', low_memory=False)
 
-    print("Merging...")
-    csv = pd.concat([csv_2018, csv_2019])
-    return csv
+        print("Merging...")
+        csv = pd.concat([csv_2018, csv_2019])
+        return csv
+
+def create_global_df(dict):
+    floors = []
+    for floor in dict:
+        floors.append(dict[floor])
+    global_data = pd.concat(floors)
+    return global_data
 
 def analyze(dict):
     print("\nAnalyzing...")
-    for department in dict:
-        print("\n-------------------------------------------------Department number : ", str(department), "--------------------------------------------------------------------\n")
-        nb_features = len(dict[str(department)].columns.values)
-        columns_with_nan = checkColumnsWithNan(dict[department])
-        nb_nan_row = dict[department].isna().sum().sum()
-        nb_line = len(dict[department].index)
+    for floor in dict:
+        print("\n-------------------------------------------------floor number : ", str(floor), "--------------------------------------------------------------------\n")
+        nb_features = len(dict[str(floor)].columns.values)
+        columns_with_nan = checkColumnsWithNan(dict[floor])
+        nb_nan_row = dict[floor].isna().sum().sum()
+        nb_line = len(dict[floor].index)
 
         print("Number of line : ", str(nb_line))
         print("\nNumber of columns with NaN values : ", str(len(columns_with_nan)), " and number of row with NaN values :", str(nb_nan_row))
         print('\nNumber of feature : ',str(nb_features))
-        print("\n", dict[department].describe())
+        print("\n", dict[floor].describe())
 
 def filling_nan(dict):
     print("\nFilling NaN values... ")

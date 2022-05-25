@@ -2,6 +2,7 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.datasets import make_regression
 from sklearn.model_selection import train_test_split
 import time
+from time import strftime
 import numpy as np
 
 global_model = MLPRegressor(random_state=0, max_iter=10000)
@@ -24,7 +25,7 @@ def federationLoop(nb_loop):
     generateLocalModels()
     while i <= nb_loop:
         print("Federation round n°" + str(i))
-        start_time = time.time()
+        globals()['start_time'] = time.time()
         updateLocalModels()
         aggregated_weight_matrix, aggregated_bias_matrix = federate()
         updateGlobalModel(aggregated_weight_matrix, aggregated_bias_matrix)
@@ -43,28 +44,40 @@ def generateLocalModels():
 def updateGlobalModel(aggregated_weight_matrix, aggregated_bias_matrix):
     global_model.partial_fit(x_train, y_train)
     print("----- UPDATE GLOBAL MODEL -----")
-    #global_model.coefs_ = aggregated_weight_matrix
+    global_model.coefs_ = aggregated_weight_matrix
     global_model.intercepts_ = aggregated_bias_matrix
     print("Global model updated")
 
 def federate():
     print("------ FEDERATE LOCAL MODELS ------")
-    weight_matrix = local_models[0].coefs_
-    bias_matrix = local_models[0].intercepts_
+    weight_matrix = []
+    bias_matrix = []
 
-    for model in local_models[1:]:
-        weight_matrix += model.coefs_
-        bias_matrix += model.intercepts_
+    for model in local_models:
+        weight_matrix.append(model.coefs_)
+        bias_matrix.append(model.intercepts_)
 
-    aggregated_weight_matrix = np.true_divide([2, 4, 6], 2).tolist()
+    aggregated_weight_matrix = aggregate(weight_matrix)
     print("Aggregated weight matrix")
     print(aggregated_weight_matrix)
 
-    aggregated_bias_matrix = np.true_divide(np.array(bias_matrix), len(local_models)).tolist()
+    aggregated_bias_matrix = aggregate(bias_matrix)
     print("Aggregated bias matrix")
     print(aggregated_bias_matrix)
 
     return aggregated_weight_matrix, aggregated_bias_matrix
+
+def aggregate(matrix):
+    average = matrix[0]
+    i=1
+    for elem in matrix[1:]:
+        average += elem
+        i+=1
+    
+    newList = [elem/i for elem in average]
+    
+    return newList
+
 
 def updateLocalModels():
     print("----- UPDATE LOCAL MODELS -----")
@@ -81,7 +94,7 @@ def generateLoopMetrics(loop_number):
 
     global_model_score_history.append(score)
     global_model_loss_history.append(global_model.best_loss_)
-    loop_duration = time.time() - start_time
+    loop_duration = (time.time() - globals()['start_time'])/60
     
     if (loop_number==1):
         globals()['global_model_best_score'] = score

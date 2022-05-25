@@ -7,7 +7,7 @@ from matplotlib.pyplot import sca
 
 from wrangling.wrangling import load_data, analyze, filling_nan, create_features, encode_to_num, scale, create_global_df
 
-floors = [3, 4 ,5, 6, 7]
+floors = [3, 4, 5, 6, 7]
 all_floors = [3, 4 ,5, 6, 7]
 datasets = dict()
 

@@ -97,7 +97,7 @@ def encode_to_num(dict, wrangling_state):
                     else:
                         unix_date = datetime.strptime(date.values[0], '%Y-%m-%d %H:%M:%S').timestamp()
                     unix_epoch.append(unix_date)
-                except KeyError:
+                except:
                     unix_epoch.append(np.nan)
                 
                 sys.stdout.write("%d out of %d \r" % (i, len(dict[floor])))

@@ -46,3 +46,12 @@ class FedAvgClass(AbstractFederated, ABC):
 
     def generateLocalModels(self):
         super().generateLocalModels()
+
+    def aggregate(self, matrix):
+        average = matrix[0]
+        i = 1
+        for elem in matrix[1:]:
+            average += np.array(elem, dtype=object)
+            i += 1
+
+        return np.true_divide(average, i).tolist()

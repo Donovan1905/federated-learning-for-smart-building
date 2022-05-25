@@ -85,7 +85,7 @@ class AbstractFederated(metaclass=ABCMeta):
             if (score > self.global_model_best_score):
                 self.global_model_best_score = score
                 self.global_model_best_loop = loop_number
-                self.best_global_model = global_model
+                self.best_global_model = self.global_model
 
         self.loop_time_history.append(loop_duration)
 
@@ -120,3 +120,7 @@ class AbstractFederated(metaclass=ABCMeta):
             model.fit(self.x_train, self.y_train)
             self.local_models.append(model)
             i = i + 1
+
+    @abstractmethod
+    def aggregate(self, matrix):
+        pass

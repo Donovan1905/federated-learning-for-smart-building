@@ -27,9 +27,7 @@ for floor in datasets:
 for floor in datasets:
     datasets[floor].to_csv(("./_data/csv/wrangled-floor-" + str(floor) + ".csv"))
 
-dataset_folder = os.path.join(os.path.dirname(__file__), "./_data/csv")
-dataset = pd.read_csv(dataset_folder + "/wrangled-floor-3.csv")
-performTraining(dataset)
+performTraining(floor)
 
 #nb_loop = 5
 #federationLoop(nb_loop)

@@ -11,15 +11,19 @@ from sklearn.datasets import make_regression
 from sklearn.metrics import mean_absolute_error, mean_squared_error, max_error
 import numpy as np
 import os
+import pandas as pd
+import datetime
 from joblib import load
 
-def performTraining(dataset):
-    X_train, X_test, y_train, y_test = generateTrainingData(dataset)
+def performTraining(floor):
+    X_train, X_test, y_train, y_test = generateTrainingData(floor)
     #models_list = loadModels()
     models_list = createModels(X_train, y_train)
-    compareModels(X_test, y_test, models_list)
+    compareModels(X_test, y_test, models_list, floor)
 
-def generateTrainingData(dataset):
+def generateTrainingData(floor):
+    dataset_folder = os.path.join(os.path.dirname(__file__), "../_data/csv")
+    dataset = pd.read_csv(dataset_folder + "/wrangled-floor-3.csv")
 
     energy_consumption = dataset["tot_energy"]
     data = dataset.drop("tot_energy", axis=1)
@@ -42,11 +46,13 @@ def createModels(X_train, y_train):
 
     return models_list
 
-def compareModels(X_test, y_test, models_list):
+def compareModels(X_test, y_test, models_list, floor):
     print("----- RUNNING MODEL COMPARISON -----")
     models_results = []
     names = []
+    results_df = pd.DataFrame(columns=['Model', 'Score_mean', 'Score_std', 'Max_error', 'MAE', 'MSE'])
     print(models_list)
+
     for name, model in models_list:
         cv_results = cross_val_score(model, X_test, y_test, scoring="neg_mean_squared_error", cv=10)
         model_scores = np.sqrt(-cv_results)
@@ -60,7 +66,17 @@ def compareModels(X_test, y_test, models_list):
         names.append(name)
         results = "\n %s: \nmean : %f \nstd : %f \nmax error : %f \nmae  : %f \nmse : %f" % (name, model_scores.mean(), model_scores.std(), max_err, mae, mse)
 
+        model_results_df = pd.DataFrame({"Model": [name], "Score_mean": [model_scores.mean()], "Score_std": [model_scores.std()], "Max_error": [max_err], "MAE": [mae], "MSE": [mse]})
+        results_df.append(model_results_df, ignore_index = True)
+
         print(results)
+
+    print("----- STORE MODEL COMPARISON -----")
+    results_folder = os.path.join(os.path.dirname(__file__), "../_data/results/learning")
+    date = datetime.datetime.now()
+    csv_results_file = results_df.to_csv(results_folder + '/floor-' + str(floor) + '-' + date + '.csv') 
+    final_results = pd.read_csv(csv_results_file)
+    print(final_results)
 
 def loadModels():
     print("----- LOADING MODELS -----")

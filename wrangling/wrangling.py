@@ -67,6 +67,7 @@ def filling_nan(dict, wrangling_state):
 def create_features(dict, wrangling_state):
     print("Calculate energy consumption...")
     for floor in dict:
+        energy_consumptions = dict[floor].filter(regex=".*(kW)").columns      
         if(wrangling_state[floor] == False):
             print("Calculate energy consumption for floor ", str(floor))
             tot_energy = [] 

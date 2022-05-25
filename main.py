@@ -17,13 +17,11 @@ for floor in floors:
     datasets[str(floor)] = df['csv']
     wrangling_state[str(floor)] = df['wrangled']
 
-# to_wrangle = []
 
-# for i in range(0, len(floors)):
-#     if(wrangling_state[i] == False):
-#         to_wrangle.
+
 
 filling_nan(datasets, wrangling_state)
+
 create_features(datasets, wrangling_state)
 encode_to_num(datasets, wrangling_state)
 scale(datasets, wrangling_state)

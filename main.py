@@ -11,20 +11,30 @@ floors = [3, 4 ,5, 6, 7]
 all_floors = [3, 4 ,5, 6, 7]
 datasets = dict()
 
+wrangling_state = dict()
 for floor in floors:
     df = load_data(floor)
-    datasets[str(floor)] = df
+    datasets[str(floor)] = df['csv']
+    wrangling_state[str(floor)] = df['wrangled']
 
-analyze(datasets)
-filling_nan(datasets)
-create_features(datasets)
-encode_to_num(datasets)
-scale(datasets)
-analyze(datasets)
+# to_wrangle = []
 
+# for i in range(0, len(floors)):
+#     if(wrangling_state[i] == False):
+#         to_wrangle.
+
+filling_nan(datasets, wrangling_state)
+create_features(datasets, wrangling_state)
+encode_to_num(datasets, wrangling_state)
+scale(datasets, wrangling_state)
 
 global_data = create_global_df(datasets)
 print("Merged all datasets into a global with ", len(global_data.index), " lines")
 
+
 for floor in datasets:
-    datasets[floor].to_csv(("./_data/csv/wrangled-floor-" + str(floor) + ".csv"))
+    if(wrangling_state[floor] == False):
+        print("Save csv for floor ", str(floor))
+        datasets[floor].to_csv(("./_data/csv/wrangled-floor-" + str(floor) + ".csv"))
+    else: 
+        print("Skip csv save for floor ", str(floor))

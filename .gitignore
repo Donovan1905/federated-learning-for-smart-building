@@ -8,6 +8,8 @@ __pycache__/
 
 env
 _data/csv
+_data/results/aggregation
+_data/results/learning
 # Distribution / packaging
 .Python
 build/

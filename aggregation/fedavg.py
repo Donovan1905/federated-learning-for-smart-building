@@ -185,8 +185,9 @@ def storeMetrics():
     rmse_history_df = pd.DataFrame(globals()['rmse_history'])
     time_history_df = pd.DataFrame(globals()['loop_time_history'])
 
-    date = datetime.datetime.now()
-    results_folder = os.path.join(os.path.dirname(__file__), "../_data/results/aggregation/fedAvg-" + date)
+    date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    results_folder = os.path.join(os.path.dirname(__file__), "../_data/results/aggregation/fedAvg-" + str(date))
+    os.mkdir(results_folder)
     
     results_df.to_csv(results_folder + '/global_results.csv')
     score_history_df.to_csv(results_folder + '/score_history.csv')

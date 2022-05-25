@@ -74,8 +74,8 @@ def compareModels(X_test, y_test, models_list, floor):
 
     print("----- STORE MODEL COMPARISON -----")
     results_folder = os.path.join(os.path.dirname(__file__), "../_data/results/learning")
-    date = datetime.datetime.now()
-    csv_results_file = results_df.to_csv(results_folder + '/floor-' + str(floor) + '-' + date + '.csv') 
+    date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    csv_results_file = results_df.to_csv(results_folder + '/floor-' + str(floor) + '-' + str(date) + '.csv') 
     final_results = pd.read_csv(csv_results_file)
     print(final_results)
 

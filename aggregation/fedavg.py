@@ -2,6 +2,7 @@ from sklearn.neural_network import MLPRegressor
 from sklearn.datasets import make_regression
 from sklearn.model_selection import train_test_split
 import time
+from time import strftime
 import numpy as np
 
 global_model = MLPRegressor(random_state=0, max_iter=10000)
@@ -43,7 +44,7 @@ def generateLocalModels():
 def updateGlobalModel(aggregated_weight_matrix, aggregated_bias_matrix):
     global_model.partial_fit(x_train, y_train)
     print("----- UPDATE GLOBAL MODEL -----")
-    #global_model.coefs_ = aggregated_weight_matrix
+    global_model.coefs_ = aggregated_weight_matrix
     global_model.intercepts_ = aggregated_bias_matrix
     print("Global model updated")
 
@@ -70,10 +71,13 @@ def aggregate(matrix):
     average = matrix[0]
     i=1
     for elem in matrix[1:]:
-        average += np.array(elem, dtype=object)
+        average += elem
         i+=1
     
-    return np.true_divide(average, i).tolist()
+    newList = [elem/i for elem in average]
+    
+    return newList
+
 
 def updateLocalModels():
     print("----- UPDATE LOCAL MODELS -----")
@@ -90,7 +94,7 @@ def generateLoopMetrics(loop_number):
 
     global_model_score_history.append(score)
     global_model_loss_history.append(global_model.best_loss_)
-    loop_duration = time.time() - start_time
+    loop_duration = (time.time() - globals()['start_time'])/60
     
     if (loop_number==1):
         globals()['global_model_best_score'] = score

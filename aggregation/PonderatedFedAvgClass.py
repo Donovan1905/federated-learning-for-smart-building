@@ -1,13 +1,11 @@
 from abc import ABC
 
-import numpy as np
-
 from aggregation.AbstractFederated import AbstractFederated
 
 
-class FedAvgClass(AbstractFederated, ABC):
+class PonderatedFedAvgClass(AbstractFederated, ABC):
     def __init__(self, nb_loop):
-        print("FedAvg created")
+        print("PonderatedFedAvg created")
         self.federationLoop(nb_loop)
 
     def federationLoop(self, nb_loop):

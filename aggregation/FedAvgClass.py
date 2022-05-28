@@ -6,12 +6,18 @@ from aggregation.AbstractFederated import AbstractFederated
 
 
 class FedAvgClass(AbstractFederated, ABC):
-    def __init__(self, nb_loop):
+    def __init__(self, nb_loop, nb_clients, testing_floor):
         print("FedAvg created")
-        self.federationLoop(nb_loop)
+        self.federationLoop(nb_loop, nb_clients, testing_floor)
 
-    def federationLoop(self, nb_loop):
-        super().federationLoop(nb_loop)
+    def generateTrainingData(self, floor):
+        return super().generateTrainingData(floor)
+
+    def generateTestingData(self, testing_floor):
+        return super().generateTestingData(testing_floor)
+
+    def federationLoop(self, nb_loop, nb_clients, testing_floor):
+        super().federationLoop(nb_loop, nb_clients, testing_floor)
 
     def federate(self):
         print("------ FEDERATE LOCAL MODELS ------")
@@ -32,20 +38,20 @@ class FedAvgClass(AbstractFederated, ABC):
 
         return aggregated_weight_matrix, aggregated_bias_matrix
 
-    def updateGlobalModel(self, aggregated_weight_matrix, aggregated_bias_matrix):
-        super().updateGlobalModel(aggregated_weight_matrix, aggregated_bias_matrix)
+    def updateGlobalModel(self, aggregated_weight_matrix, aggregated_bias_matrix, X_train_compare, y_train_compare):
+        super().updateGlobalModel(aggregated_weight_matrix, aggregated_bias_matrix, X_train_compare, y_train_compare)
 
     def updateLocalModels(self):
         super().updateLocalModels()
 
-    def generateLoopMetrics(self, loop_number):
-        super().generateLoopMetrics(loop_number)
+    def generateLoopMetrics(self, loop_number, X_test_compare, y_test_compare):
+        super().generateLoopMetrics(loop_number, X_test_compare, y_test_compare)
 
     def printMetrics(self):
         super().printMetrics()
 
-    def generateLocalModels(self):
-        super().generateLocalModels()
+    def generateLocalModels(self, nb_clients):
+        super().generateLocalModels(nb_clients)
 
     def aggregate(self, matrix):
         average = matrix[0]
@@ -57,3 +63,6 @@ class FedAvgClass(AbstractFederated, ABC):
         newList = [elem / i for elem in average]
 
         return newList
+
+    def storeMetrics(self):
+        super().storeMetrics()

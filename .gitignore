@@ -8,9 +8,9 @@ __pycache__/
 
 env
 venv
-_data/csv
-_data/results/aggregation
-_data/results/learning
+# _data/csv
+# _data/results/aggregation
+# _data/results/learning
 # Distribution / packaging
 .Python
 build/

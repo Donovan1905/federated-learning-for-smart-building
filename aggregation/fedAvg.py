@@ -11,8 +11,9 @@ import datetime
 
 global_model = MLPRegressor(random_state=0, max_iter=10000)
 local_models = []
-X, y = make_regression(n_samples=200, random_state=1)
-x_train, x_test, y_train, y_test = train_test_split(X, y, random_state=1)
+local_models_X_data = []
+local_models_Y_data = []
+
 global_model_best_score = 0
 global_model_best_loss = 0
 global_model_best_round = 0 
@@ -29,31 +30,56 @@ mae_history = []
 mse_history = []
 rmse_history = []
 
+def generateTrainingData(floor):
+    dataset_folder = os.path.join(os.path.dirname(__file__), "../_data/csv")
+    dataset = pd.read_csv(dataset_folder + "/wrangled-floor-" + str(floor) +".csv")
 
-def federationLoop(nb_loop):
+    energy_consumption = dataset["tot_energy"]
+    data = dataset.drop("tot_energy", axis=1)
+
+    X_train, X_test, y_train, y_test = train_test_split(data, energy_consumption, test_size=0.2, random_state=42)
+
+    return X_train, X_test, y_train, y_test
+
+def generateTestingData(testing_floor):
+    dataset_folder = os.path.join(os.path.dirname(__file__), "../_data/csv")
+    dataset = pd.read_csv(dataset_folder + "/wrangled-floor-" + str(testing_floor) +".csv")
+
+    energy_consumption = dataset["tot_energy"]
+    data = dataset.drop("tot_energy", axis=1)
+
+    X_train, X_test, y_train, y_test = train_test_split(data, energy_consumption, test_size=0.2, random_state=42)
+
+    return X_train, X_test, y_train, y_test
+
+def fedAvg(nb_loop, nb_clients, testing_floor):
     i = 1
-    generateLocalModels()
+    X_train_compare, X_test_compare, y_train_compare, y_test_compare = generateTestingData(testing_floor)
+    generateLocalModels(nb_clients)
     while i <= nb_loop:
         print("Federation round n°" + str(i))
         globals()['start_time'] = time.time()
-        updateLocalModels()
         aggregated_weight_matrix, aggregated_bias_matrix = federate()
-        updateGlobalModel(aggregated_weight_matrix, aggregated_bias_matrix)
-        generateLoopMetrics(i)
+        updateGlobalModel(aggregated_weight_matrix, aggregated_bias_matrix, X_train_compare, y_train_compare)
+        updateLocalModels()
+        generateLoopMetrics(i, X_test_compare, y_test_compare)
         i = i+1
     printMetrics()
     storeMetrics()
 
-def generateLocalModels():
+def generateLocalModels(nb_clients):
     i = 0
-    while i < 5:
+    while i <= nb_clients:
+        X_train, X_test, y_train, y_test = generateTrainingData(i+3)
+        local_models_X_data.append(X_train)
+        local_models_Y_data.append(y_train)
         model = MLPRegressor(random_state=0, max_iter=10000)
-        model.fit(x_train, y_train)
+        model.fit(X_train, y_train)
         local_models.append(model)
         i = i+1
 
-def updateGlobalModel(aggregated_weight_matrix, aggregated_bias_matrix):
-    global_model.partial_fit(x_train, y_train)
+def updateGlobalModel(aggregated_weight_matrix, aggregated_bias_matrix, X_train_compare, y_train_compare):
+    global_model.partial_fit(X_train_compare, y_train_compare)
     print("----- UPDATE GLOBAL MODEL -----")
     global_model.coefs_ = aggregated_weight_matrix
     global_model.intercepts_ = aggregated_bias_matrix
@@ -67,14 +93,9 @@ def federate():
     for model in local_models:
         weight_matrix.append(model.coefs_)
         bias_matrix.append(model.intercepts_)
-
     aggregated_weight_matrix = aggregate(weight_matrix)
-    print("Aggregated weight matrix")
-    print(aggregated_weight_matrix)
 
     aggregated_bias_matrix = aggregate(bias_matrix)
-    print("Aggregated bias matrix")
-    print(aggregated_bias_matrix)
 
     return aggregated_weight_matrix, aggregated_bias_matrix
 
@@ -84,24 +105,23 @@ def aggregate(matrix):
     for elem in matrix[1:]:
         average += elem
         i+=1
-    
     newList = [elem/i for elem in average]
-    
     return newList
 
 
 def updateLocalModels():
     print("----- UPDATE LOCAL MODELS -----")
-    i = 1
+    i = 0
     for model in local_models:
+        model_index = local_models.index(model)
         model = global_model
-        model.fit(x_train, y_train)
-        print("Model n°" + str(i) + " updated")
+        model.fit(local_models_X_data[model_index], local_models_Y_data[model_index])
+        print("Client n°" + str(i+1) + " updated")
         i = i+1
 
-def generateLoopMetrics(loop_number):
+def generateLoopMetrics(loop_number, X_test_compare, y_test_compare):
     print("----- GENERATE METRICS -----")
-    score = global_model.score(x_test, y_test)
+    score = global_model.score(X_test_compare, y_test_compare)
 
     global_model_score_history.append(score)
     global_model_loss_history.append(global_model.best_loss_)
@@ -113,11 +133,11 @@ def generateLoopMetrics(loop_number):
     loop_rmse = []
 
     for model in local_models:
-        y_pred = model.predict(x_test)
-        loop_max_err.append(max_error(y_test, y_pred))
-        loop_mae.append(mean_absolute_error(y_test, y_pred))
-        loop_mse.append(mean_squared_error(y_test, y_pred))
-        loop_rmse.append(np.sqrt(mean_squared_error(y_test, y_pred)))
+        y_pred = model.predict(X_test_compare)
+        loop_max_err.append(max_error(y_test_compare, y_pred))
+        loop_mae.append(mean_absolute_error(y_test_compare, y_pred))
+        loop_mse.append(mean_squared_error(y_test_compare, y_pred))
+        loop_rmse.append(np.sqrt(mean_squared_error(y_test_compare, y_pred)))
 
     max_err_history.append(min(loop_max_err))
     mae_history.append(min(loop_mae))
@@ -197,4 +217,3 @@ def storeMetrics():
     mse_history_df.to_csv(results_folder + '/mse_history.csv') 
     rmse_history_df.to_csv(results_folder + '/rmse_history.csv') 
     time_history_df.to_csv(results_folder + '/time_history.csv') 
- 

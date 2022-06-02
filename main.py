@@ -7,7 +7,7 @@ from matplotlib.pyplot import sca
 from learning.main import performTraining
 from aggregation.fedAvg import fedAvg
 from aggregation.fedDist import fedDist
-from wrangling.wrangling import load_data, analyze, filling_nan, create_features, encode_to_num, scale
+from wrangling.wrangling import load_data, analyze, filling_nan, create_features, encode_to_num, scale, create_global_df
 import numpy as np
 import glob
 

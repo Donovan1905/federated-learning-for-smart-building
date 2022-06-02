@@ -23,6 +23,10 @@ pip install -r requirements.txt
 
 
 
+## Dataset import
+
+Due to the maximum file size of GitHub your have to replace the `./_data` folder by the one provided in the zip archive of the project.
+
 ## Run main
 
 ```bash

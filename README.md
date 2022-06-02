@@ -17,9 +17,19 @@ You can find the corresponding paper in the project root `./Aggregation_algorith
 
 ## Python package
 
-```shell
+```bash
 pip install -r requirements.txt
 ```
+
+
+
+## Run main
+
+```bash
+python ./main.py
+```
+
+
 
 # Folders
 
@@ -33,4 +43,3 @@ pip install -r requirements.txt
 
 
 
-\

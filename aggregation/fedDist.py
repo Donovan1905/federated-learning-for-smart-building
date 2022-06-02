@@ -35,7 +35,7 @@ rmse_history = []
 
 def generateTrainingData(floor, nb_loop):
     dataset_folder = os.path.join(os.path.dirname(__file__), "../_data/csv")
-    dataset = pd.read_csv(dataset_folder + "/wrangled-floor-" + str(floor) +".csv")
+    dataset = pd.read_csv(dataset_folder + "/wrangled-floor-unscale-" + str(floor) +".csv")
 
     energy_consumption = dataset["tot_energy"]
     data = dataset.drop("tot_energy", axis=1)
@@ -55,7 +55,7 @@ def generateTrainingData(floor, nb_loop):
 
 def generateTestingData(testing_floor):
     dataset_folder = os.path.join(os.path.dirname(__file__), "../_data/csv")
-    dataset = pd.read_csv(dataset_folder + "/wrangled-floor-" + str(testing_floor) +".csv")
+    dataset = pd.read_csv(dataset_folder + "/wrangled-floor-unscale-" + str(testing_floor) +".csv")
 
     energy_consumption = dataset["tot_energy"]
     data = dataset.drop("tot_energy", axis=1)

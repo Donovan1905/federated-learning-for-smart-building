@@ -1,3 +1,0 @@
-,Best score,Best loss,Fastest round duration,Model best round id,Fastest round id,Best_model'
-0,-2.322952399480549e-05,872.1587405367377,0.10894043842951456,4,10,"MLPRegressor(activation='tanh', hidden_layer_sizes=(15,), max_iter=1000,
-             random_state=42)"

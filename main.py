@@ -42,9 +42,9 @@ for floor in datasets:
     else: 
         print("Skip csv save for floor ", str(floor))
 
-for client in local_clients:
-    performTraining(client, testing_floor)
-nb_loop = 10
+# for client in local_clients:
+#     performTraining(client, testing_floor)
+nb_loop = 5
 print("----- START RUNNING FED_AVG ALGORITHM -----")
 fedAvg(nb_loop, len(local_clients), testing_floor)
 print("----- START RUNNING FED_DIST ALGORITHM -----")
